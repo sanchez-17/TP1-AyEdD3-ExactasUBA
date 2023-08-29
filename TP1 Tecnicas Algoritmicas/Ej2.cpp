@@ -1,5 +1,5 @@
 #include <iostream>
-#include "../backtracking/utilities.h"
+#include "../utilities.h"
 #define ll unsigned long long
 using namespace std;
 int N;vector<vector<ll>> M;ll MOD = 1e9 + 7;
@@ -11,7 +11,8 @@ void f(vector<bool>& usados,ll descGral,ll tiempo,int cnt){
         forn(i,N) if(!usados[i]){
             usados[i] = true;
             ll tiempoActual =  tiempo+M[0][i];
-            f(usados, descGral +  tiempoActual * M[1][i],tiempoActual, cnt+1);
+            ll desc_nuevo =  descGral + ( tiempoActual * M[1][i] )  ;
+            f(usados, desc_nuevo,tiempoActual, cnt+1);
             usados[i] = false;
         }
     }
@@ -32,6 +33,5 @@ int main(){
         solve();
         SUM_MIN = 1e10;
     }
-
     return 0;
 }
