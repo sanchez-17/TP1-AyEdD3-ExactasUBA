@@ -11,7 +11,7 @@ vector<ll> tiempo;
 vector<pll> parciales;
 ll MOD = 1e9 + 7;
 
-bool porCociente (pll i,pll j) { return  (i.fst / i.snd) < (j.fst/j.snd) ; }
+bool porCociente (pll i,pll j) { return  (i.fst * j.snd) < (j.fst * i.snd) ; }
 
 void solve(){
     ll res = 0;
