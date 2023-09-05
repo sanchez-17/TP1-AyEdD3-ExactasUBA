@@ -3,16 +3,33 @@
 
 #include <iostream>
 #include <vector>
+#include <string>
 #include <math.h>
+#include <algorithm>
 using namespace std;
-#define forr(i,a,b) for(int i=(int)a;i<(int)b;i++)
+#define fastio ios_base::sync_with_stdio(0); cin.tie(0); cin.exceptions(cin.failbit);
+#define forr(i,a,b) for(int i = (int) a; i < (int) b; i++)
 #define forn(i,n) forr(i,0,n)
+#define dforr(i,a,b) for(int i = (int) b-1; i >= (int) a; i--)
+#define dforn(i,n) dforr(i,0,n)
+//renombres facheros
 #define rz resize
-#define sz(V) V.size()
+#define all(x) (x).begin(), (x).end()
+#define sz(x) (int)(x).size()
 #define pb push_back
 #define ppb pop_back
 #define fst first
 #define snd second
+#define pii pair<int,int>
+#define vi vector<int>
+#define matriz vector<vector<int>>
+//Para debugear
+#define DBG(x) cerr << #x << " = " << (x) << endl;
+#define DBG2(x,y)   cerr << #x << " = " << (x) << " , " << #y << " = " << (y) << endl;
+#define DBG3(x,y,z)   cerr << #x << " = " << (x) << " , " << #y << " = " << (y) << " , " << #z << " = " << (z)<< " , " << endl;
+#define DBG4(x,y,z,w) cerr << #x << " = " << (x) << " , " << #y << " = " << (y) << " , " << #z << " = " << (z)<< " , " << #w << " = " << (w) << endl;
+#define DBGY(x) cerr << #x << " = " << (x) << " , ";
+#define RAYA cerr<<"========================="<<endl;
 
 template<class T>
 void impMatriz(vector<vector<T>>& M){
@@ -33,12 +50,15 @@ void impVector(vector<T>& V){
 }
 
 template<class T>
-void impVectorTuplas(vector<T>& V){
-    int n = V.size();
-    cout << "\n"<<"V:";
-    forn(i,n) cout<< "("<<V[i].fst << "," << V[i].snd<<")" << ",";
-    cout << "\n";
+ostream & operator <<(ostream &os, const vector<T>&v){
+	os << "[";
+	forn(i,sz(v)){
+		if (i>0) os	<< ",";
+		os << v[i];
+	}
+	return os << "]";
 }
+
 bool porFila(vector<vector<int>>& C,int sum){
 		int n = sz(C),sumFila;
 		bool res = true;
