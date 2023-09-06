@@ -1,5 +1,10 @@
+
 Configuracion Geany para automatizar tests: 
 for x in "%e"*.in ; do echo $x; time "./%e" < "$x" ; echo "=======================";done
+
+Para consola linux:
+for x in *.in ; do echo $x ; time ./main < "$x";echo "==================";done
+
 Ej.1 TP1 Algo3 2c2023
 L I # + 
 + - - -
