@@ -1,30 +1,36 @@
 #include <iostream>
 #include <vector>
 #include <math.h>
-using namespace std;
-#define forr(i,a,b) for(int i=(int)a;i<(int)b;i++)
-#define fors(i,a,b) for(int i=(int)a;i>=(int)b;i--)
-#define dfor(i,n) fors(i,n,0)
-#define forn(i,n) forr(i,0,n)
-#define rz resize
-#define sz(V) V.size()
-#define pb push_back
-#define ppb pop_back
+#include "../../utilities.h"
 
-int m,N,W;vector<int> libro;vector<int>RES;
-vector<int> Acum;
-void solve(int i,int  ){
+int m, N, W, RANGO; vector<int> libro;vector<char> RES; int sumaMax, sumaMin;
+vector<vector<int>> memo ;
+bool f(int i,int sum){
+    if(i == 0) return sum == 0;
+    else{
+        if(memo[i][sum + RANGO] != -1) return memo[i][sum + RANGO];
+        bool a = f(i-1, sum-libro[i]);
+        bool b = f(i-1, sum+libro[i]);
+        if( a && b ) RES.pb('?');
+        else if( a ) RES.pb('-');
+        else RES.pb('+');
+        return a || b;
+    }
     
 }
 
 int main(){
     cin>>m;
     forn(i,m){
-        cin>>N>>W;libro.rz(N);Acum.rz(N+1,0);
-        forn(i,N) cin >> libro[i];
-        dfor(i,N-1) Acum[i] = libro[i] + Acum[i+1];
-        solve();
-        impVector(RES);
+        cin>>N>>W;libro.rz(N);//Acum.rz(N+1,0);
+        forn(i,N) cin >> libro[i] / 100;
+        //Vemos el rango
+        sumaMax = 0 ;
+        forn(i,N) sumaMax += libro[i];
+        RANGO = 2*sumaMax+1; memo.rz(N+1,vector<int>(RANGO,-1));
+        //dfor(i,N-1) Acum[i] = libro[i] + Acum[i+1];
+        f(N-1,W);
+        DBG(RES);
     }
 	return 0;
 }
