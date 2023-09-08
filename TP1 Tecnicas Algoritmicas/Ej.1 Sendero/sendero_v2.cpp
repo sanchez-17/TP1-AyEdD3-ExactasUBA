@@ -17,6 +17,11 @@ vector<vector<char> > tablero;
 int MAX, MIN;
 bool posible;
 
+//arriba=3
+//abajo=4
+//izq=5
+//der=6
+
 void senderos(int i, int j, int pasado, int num){
     if(N <= i || i < 0 || N <= j ||j < 0){
         return;
