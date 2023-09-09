@@ -61,7 +61,7 @@ void solve(){
 int main(){
     int c;
     cin>>c;
-    forn(i,c){
+    forn(k,c){
         cin >> N >> M;
         tablero.rz(N,vector<char>(M));
         camino.rz(N, vector<bool>(M, 0));
