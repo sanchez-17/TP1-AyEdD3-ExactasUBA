@@ -13,7 +13,7 @@ void calcularRes(string& res){
 
 bool f(int i, int sum, string& res ){
 	DBG4(i,sum,res,RES);//impAux(memo);
-    if(i == N) if (sum == 0) {
+    if(i == N) if (sum == W) {
 					//Llegue a una solucion valida y debo saber si habia una antes
 					if(sz(RES) == 0) RES = res;
 					else             calcularRes(res);
@@ -56,7 +56,7 @@ int main(){
 		string res;
 		
 		RAYA;RAYA;
-        f(0, W, res);
+        f(0, 0, res);
         DBG(RES);
         memo.clear(); libro.clear();RES.clear();
 		RAYA;RAYA;
