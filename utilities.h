@@ -6,6 +6,7 @@
 #include <string>
 #include <math.h>
 #include <algorithm>
+#include <iomanip>
 using namespace std;
 #define fastio ios_base::sync_with_stdio(0); cin.tie(0); cin.exceptions(cin.failbit);
 #define forr(i,a,b) for(int i = (int) a; i < (int) b; i++)
@@ -22,14 +23,52 @@ using namespace std;
 #define snd second
 #define pii pair<int,int>
 #define vi vector<int>
-#define matriz vector<vector<int>>
+#define matriz vector<vector<int> >
 //Para debugear
+#define DBS(x) RAYA;cerr << (x) << endl;
 #define DBG(x) cerr << #x << " = " << (x) << endl;
 #define DBG2(x,y)   cerr << #x << " = " << (x) << " , " << #y << " = " << (y) << endl;
 #define DBG3(x,y,z)   cerr << #x << " = " << (x) << " , " << #y << " = " << (y) << " , " << #z << " = " << (z)<< " , " << endl;
 #define DBG4(x,y,z,w) cerr << #x << " = " << (x) << " , " << #y << " = " << (y) << " , " << #z << " = " << (z)<< " , " << #w << " = " << (w) << endl;
 #define DBGY(x) cerr << #x << " = " << (x) << " , ";
 #define RAYA cerr<<"========================="<<endl;
+
+template<class T>
+void impAux(vector<vector<T>>& M){
+	int filas = M.size();
+	int columnas = M[0].size();
+	int max_longitud = 0;
+    for (int i = 0; i < filas; i++) {
+        for (int j = 0; j < columnas; j++) {
+            int longitud_actual = std::to_string(M[i][j]).length();
+            if (longitud_actual > max_longitud) {
+                max_longitud = longitud_actual;
+            }
+        }
+    }
+
+    // Imprimir la matriz con formato
+    for (int i = 0; i < filas; i++) {
+        for (int j = 0; j < columnas; j++) {
+            std::cout << std::setw(max_longitud + 2) << M[i][j];
+        }
+        std::cout << std::endl;
+    }
+}
+
+template<class T>
+void impMemo(vector<vector<T>>& M){
+	int n = M.size();int m = M[0].size();
+	//Mostrar indices
+	forn(i,m+1) cout << -i-1 << " ";
+	
+	forn(i,n)
+	{ 
+		cout << "\n" << i << " ";
+		forn(j,m) cout << M[i][j] << " ";
+	}
+	cout << "\n";
+}
 
 template<class T>
 void impMatriz(vector<vector<T>>& M){
