@@ -5,28 +5,28 @@
 
 int m, N, W, RANGO; vector<int> libro;vector<char> RES; int sumaMax, sumaMin;
 vector<vector<int>> memo ;
-bool f(int i,int sum){
-    if(i == -1) return sum == 0;
+
+bool f(int i,int sum, vector<char>& res ){
+    if(i == -1) if (sum == 0) {
+			if(sz(RES) == 0) RES = res;
+			else             calcularRes(res);
+			return true;
+		}else   return false;
     else{
-        //DBG3(RES,i,sum);
-        //cout << "aca hay un " << memo[i][sum + RANGO] << "\n";
-        //DBG(memo);
-        //DBG(memo[i][sum + sumaMax]);
-        //DBGY(i);DBG4(sumaMax,sum,sumaMax + sum, RANGO);
         if(memo[i][sum + sumaMax] != -1) return memo[i][sum + sumaMax];
-        //cout << "llegue lol";
-        bool res;
-        RES.pb('+');
-        bool a = f(i-1, sum-libro[i]);
-        RES.ppb();
-        RES.pb('-');
-        bool b = f(i-1, sum+libro[i]);
-        RES.ppb();
-        if( a && b ){ RES.pb('?'); res =true ;RES.ppb();}
-        else if( a || b) {RES.pb(a ? '+' : '-'); res = true;RES.ppb();}
-        else res = false;
-        memo[i][sum + sumaMax] = res; //-1 indef, 1 true : 0 false
-        return res;
+        bool r;
+	//Pruebo sumando
+        res.pb('+');
+        bool a = f(i-1, sum-libro[i], res);
+        res.ppb();
+	//Pruebo restando
+        res.pb('-');
+        bool b = f(i-1, sum+libro[i], res);
+        res.ppb();
+	
+	r =  a || b;
+        memo[i][sum + sumaMax] = r; //-1 indef, 1 true : 0 false
+        return r;
     }
     
 }
@@ -49,3 +49,4 @@ int main(){
     }
 	return 0;
 }
+
