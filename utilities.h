@@ -56,12 +56,10 @@ void impAux(vector<vector<T>>& M){
     }
 }
 
+
 template<class T>
 void impMemo(vector<vector<T>>& M){
 	int n = M.size();int m = M[0].size();
-	//Mostrar indices
-	forn(i,m+1) cout << -i-1 << " ";
-	
 	forn(i,n)
 	{ 
 		cout << "\n" << i << " ";
@@ -69,6 +67,8 @@ void impMemo(vector<vector<T>>& M){
 	}
 	cout << "\n";
 }
+
+
 
 template<class T>
 void impMatriz(vector<vector<T>>& M){
@@ -80,6 +80,7 @@ void impMatriz(vector<vector<T>>& M){
 	}
 	cout << "\n";
 }
+
 template<class T>
 void impVector(vector<T>& V){
 	int n = V.size();
