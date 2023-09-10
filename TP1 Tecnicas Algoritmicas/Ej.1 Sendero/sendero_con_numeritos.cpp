@@ -1,19 +1,24 @@
 #include <iostream>
 #include <algorithm>
-#include "../../utilities.h"
-#define rz resize
 using namespace std;
+#define fastio ios_base::sync_with_stdio(0); cin.tie(0); cin.exceptions(cin.failbit);
+#define forr(i,a,b) for(int i = (int) a; i < (int) b; i++)
+#define forn(i,n) forr(i,0,n)
+#define rz resize
+#define sz(x) (int)(x).size()
 
 int N,M;
-vector<vector<char>> tablero;
-vector<vector<bool>> camino;
-int MAX, MIN;
+const int MAX_N = 120, MAX_M = 120;
+char tablero[MAX_N][MAX_M];
+bool camino[MAX_N][MAX_M] = {{false}};
+int MAX = -1, MIN = 121;
 bool posible;
 
-/*Arriba = 1
+/*
+ *Arriba = 1
  *Abajo = 2
- * Izquierda = 3
- * Derecha = 4
+ *Izquierda = 3
+ *Derecha = 4
  */
 
 void senderos(int i, int j, int pasado, int num){
@@ -65,18 +70,17 @@ void solve(){
 
 
 int main(){
+	fastio;
     int c;
     cin>>c;
-    forn(i,c){
+    forn(t,c){
         cin >> N >> M;
-        tablero.rz(N,vector<char>(M));
-        camino.rz(N, vector<bool>(M, 0));
         MAX = -1;
         MIN = 121;
         posible = false;
         forn(i,N) forn(j,M) cin >> tablero[i][j];
         solve();
-        tablero.clear(); camino.clear();
+        forn(i,N) forn(j,M) camino[i][j] = false;
     }
     return 0;
 }
