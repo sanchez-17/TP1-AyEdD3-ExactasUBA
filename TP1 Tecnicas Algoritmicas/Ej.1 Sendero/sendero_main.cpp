@@ -5,10 +5,10 @@ using namespace std;
 #define forr(i,a,b) for(int i = (int) a; i < (int) b; i++)
 #define forn(i,n) forr(i,0,n)
 #define DBG4(x,y,z,w) cerr << #x << " = " << (x) << " , " << #y << " = " << (y) << " , " << #z << " = " << (z)<< " , " << #w << " = " << (w) << endl;
-#define arr 1
-#define aba 2
-#define izq 3
-#define der 4
+#define arr 1 //Arriba
+#define aba 2 //Abajo
+#define izq 3 //Izquierda
+#define der 4 //Derecha
 
 
 
@@ -19,20 +19,13 @@ bool camino[MAX_N][MAX_M] = {{false}};
 int MAX = -1, MIN = 121;
 bool posible;
 
-/*
- *Arriba = 1
- *Abajo = 2
- *Izquierda = 3
- *Derecha = 4
- */
-
 bool todaFilaRecorrida(int fila) {
     forn(j, M) if (!camino[fila][j]) return false;
     return true;
 }
 
 bool todaColRecorrida(int col) {
-    forn(i, M) if (!camino[i][col]) return false;
+    forn(i, N) if (!camino[i][col]) return false;
     return true;
 }
 
@@ -48,8 +41,8 @@ void senderos(int i, int j, int desde, int num){
     }else{
         camino[i][j] = true;bool a,b;
         a = b = false;
-        if( (j==0 || j==M-1) && (i!=0) && desde != arr && todaFilaRecorrida(i) && !camino[i-1][j]) {camino[i-1][j] = true;a = true;}
-        if( (i==0 || i==N-1) && (j!=0) && desde != izq && todaColRecorrida(j) && !camino[i][j-1]) {camino[i][j-1] = true;b = true;}
+        //if( (j==0 || j==M-1) && (i!=0) && desde != arr && todaFilaRecorrida(i) && !camino[i-1][j]) {camino[i-1][j] = true;a = true;}
+        //if( (i==0 || i==N-1) && (j!=0) && desde != izq && todaColRecorrida(j) && !camino[i][j-1]) {camino[i][j-1] = true;b = true;}
         if(tablero[i][j] == 'I'){
             if(desde == arr) senderos(i+1, j, arr, num+1);
             if(desde == aba) senderos(i-1, j, aba, num+1);
@@ -73,8 +66,8 @@ void senderos(int i, int j, int desde, int num){
             senderos(i, j-1, der, num+1);
         }
         camino[i][j] = false;
-        if(a) camino[i-1][j]=false;
-        if(b) camino[i][j-1]=false;
+        //if(a) camino[i-1][j]=false;
+        //if(b) camino[i][j-1]=false;
     }
 }
 
