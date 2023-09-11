@@ -5,6 +5,12 @@ using namespace std;
 #define forr(i,a,b) for(int i = (int) a; i < (int) b; i++)
 #define forn(i,n) forr(i,0,n)
 #define DBG4(x,y,z,w) cerr << #x << " = " << (x) << " , " << #y << " = " << (y) << " , " << #z << " = " << (z)<< " , " << #w << " = " << (w) << endl;
+#define arr 1
+#define aba 2
+#define izq 3
+#define der 4
+
+
 
 int N,M;
 const int MAX_N = 121, MAX_M = 121;
@@ -42,29 +48,29 @@ void senderos(int i, int j, int desde, int num){
     }else{
         camino[i][j] = true;bool a,b;
         a = b = false;
-        if( (j==0 || j==M-1) && (i!=0) && desde != 1 && todaFilaRecorrida(i) && !camino[i-1][j]) {camino[i-1][j] = true;a = true;}
-        if( (i==0 || i==N-1) && (j!=0) && desde != 3 && todaColRecorrida(j) && !camino[i][j-1]) {camino[i][j-1] = true;b = true;}
+        if( (j==0 || j==M-1) && (i!=0) && desde != arr && todaFilaRecorrida(i) && !camino[i-1][j]) {camino[i-1][j] = true;a = true;}
+        if( (i==0 || i==N-1) && (j!=0) && desde != izq && todaColRecorrida(j) && !camino[i][j-1]) {camino[i][j-1] = true;b = true;}
         if(tablero[i][j] == 'I'){
-            if(desde == 1) senderos(i+1, j, 1, num+1);
-            if(desde == 2) senderos(i-1, j, 2, num+1);
-            if(desde == 3) senderos(i, j+1, 3, num+1);
-            if(desde == 4) senderos(i, j-1, 4, num+1);
+            if(desde == arr) senderos(i+1, j, arr, num+1);
+            if(desde == aba) senderos(i-1, j, aba, num+1);
+            if(desde == izq) senderos(i, j+1, izq, num+1);
+            if(desde == der) senderos(i, j-1, der, num+1);
         }
         if(tablero[i][j] == 'L'){
-            if(desde == 1 || desde == 2){
-                senderos(i, j+1, 3, num+1);
-                senderos(i, j-1, 4, num+1);
+            if(desde == arr || desde == aba){
+                senderos(i, j+1, izq, num+1);
+                senderos(i, j-1, der, num+1);
             }
-            if(desde == 3 || desde == 4){
-                senderos(i+1, j, 1, num+1);
-                senderos(i-1, j, 2, num+1);
+            if(desde == izq || desde == der){
+                senderos(i+1, j, arr, num+1);
+                senderos(i-1, j, aba, num+1);
             }
         }
         if(tablero[i][j] == '+'){
-			senderos(i+1, j, 1, num+1);
-            senderos(i, j+1, 3, num+1);
-            senderos(i-1, j, 2, num+1);
-            senderos(i, j-1, 4, num+1);
+			senderos(i+1, j, arr, num+1);
+            senderos(i, j+1, izq, num+1);
+            senderos(i-1, j, aba, num+1);
+            senderos(i, j-1, der, num+1);
         }
         camino[i][j] = false;
         if(a) camino[i-1][j]=false;
@@ -77,8 +83,8 @@ void solve(){
         cout<< "IMPOSIBLE" << endl;
         return;
     }
-    senderos(0,0,1,0);
-    if(tablero[0][0] != '+' ) senderos(0,0,3,0);
+    senderos(0,0,arr,0);
+    if(tablero[0][0] != '+' ) senderos(0,0,izq,0);
     
     if(posible) cout << "POSIBLE " << MIN << " " << MAX << endl;
     else cout << "IMPOSIBLE" << endl;
