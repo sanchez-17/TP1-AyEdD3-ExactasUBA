@@ -7,8 +7,9 @@ lbit);
 #define forr(i,a,b) for(int i = (int) a; i < (int) b; i++)
 #define forn(i,n) forr(i,0,n)
 
-int c,N,K;
+int c, N, K;
 const int INF = 10000000;
+int MIN_COSTO = INF;
 const int MAX_N = 110;
 const int MAX_K = 110;
 int puestos[MAX_N];
@@ -29,13 +30,14 @@ int f(int i, int k, vector<int>& v){
     if(k > N-i)       return INF;
     //if(dp[i][k]!= -1) return dp[i][k];
     if(k == 0){
-        return costo(v);
+        int res = costo(v);
+        if(res < MIN_COSTO ) {MIN_COSTO = res; RES = v;}
+        return res;
     }
     int costo = INF;
     forr(j,i,N-k+1){
         v.push_back(puestos[j]);
         int costoI = f(j+1,k-1,v);
-        if(k==1 && costoI < costo) RES = v;
         costo = min(costo, costoI);
         v.pop_back();
     }
@@ -56,6 +58,7 @@ int main(){
         }
         cout << "\n";
         forn(i,N+1) forn(j,K+1) dp[i][j] = -1;
+
         RES = {};
     }
     return 0;
