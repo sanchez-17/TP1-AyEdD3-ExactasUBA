@@ -10,7 +10,9 @@ lbit);
 int c,N,K;
 const int INF = 10000000;
 const int MAX_N = 110;
+const int MAX_K = 110;
 int puestos[MAX_N];
+int dp[MAX_N][MAX_K] = {{-1}};
 vector<int> RES;
 
 int costo(vector<int>& v){
@@ -26,8 +28,9 @@ int costo(vector<int>& v){
 }
 
 int f(int i, int k, vector<int>& v){
-    if(k > N-i) return INF;
-    if(k == 0) {return costo(v);}
+    if(k > N-i)       return INF;
+    if(k == 0)        return costo(v);
+    if(dp[i][k]!= -1) return dp[i][k];
     int costo = INF;
     forr(j,i,N-k+1){
         v.push_back(puestos[j]);
@@ -35,6 +38,7 @@ int f(int i, int k, vector<int>& v){
         v.pop_back();
         costo = min(costo, costoI);
     }
+    dp[i][k] = costo;
     return costo;
 }
 
@@ -44,7 +48,8 @@ int main(){
         cin >> N >> K;
         forn(i,N) cin >> puestos[i];
         vector<int> v;
-        cout << f(0,K,v) << endl;
+        cout << f(0,K,v) << '\n';
+        forn(i,N+1) forn(j,K+1) dp[i][j] = -1;
     }
     return 0;
 }
