@@ -41,7 +41,7 @@ int f(int i, int k, vector<int>& v){
         int costoI = f(j+1,k-1,v);
         if(costoI < costo){
             costo = costoI;
-            if(puestos[j] < puestoMin) puestoMin = puestos[j];
+            puestoMin = puestos[j];
         }
         v.pop_back();
     }
