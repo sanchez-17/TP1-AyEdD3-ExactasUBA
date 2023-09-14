@@ -33,19 +33,33 @@ int costo(vector<int>& v){
 }
 
 int f(int provAnt, int costeAcum, int i, int k, vector<int>& v){
-    //if(dp[ant+1][i][k] != -1) return dp[ant+1][i][k];
-    if(k == 0) return costo(v);
+    //if(dp[costeAcum][i][k] != -1) return dp[costeAcum][i][k];
+    if(k == 0){
+        //Actualizo los gastos de los puestos restantes desde la proveeduria anterior hasta el ultimo puesto
+        forr(p, provAnt, N)
+            costeAcum += abs(puestos[provAnt] - puestos[p]);
+        return costeAcum;//costo(v);
+    }
     int costo = INF; int puestoMin = INF;
     forr(j, i, N-k+1){
         v.push_back(puestos[j]);
-		//ACtualizo los gastos de los puestos desde el puesto siguiente inmediato a 
-		//la proveedria anterior hasta el puesto (j-1)-esimo
-		forr(p, provAnt+1, j+1){
-			int costoAProAnt = abs(puestos[provAnt] - puestos[p]);
-			int costoAProvSig = abs(puestos[j] - puestos[p]);
-			if(costoAProvSig < costoAProvAnt) costeAcum += costoAProSig - costoAProvAnt;
+		//Actualizo los gastos de los puestos desde el puesto siguiente inmediato a
+		//la proveeduria anterior hasta el puesto (j-1)-esimo inclusive
+		int ct = costeAcum;
+		forr(p, provAnt+1, j){
+			if(provAnt != -1){//si provAnt es -1, entonces no hay proveeduria anterior
+				int costoAProvAnt = abs(puestos[provAnt] - puestos[p]);
+				int costoAProvSig = abs(puestos[j] - puestos[p]);
+				if(costoAProvSig < costoAProvAnt)
+					ct += costoAProvSig;
+                else
+                    ct += costoAProvAnt;
+			}else{
+				ct += abs(puestos[j] - puestos[p]);
+			}
+
 		}
-        int costoI = f(j, costeAcum, j+1, k-1, v);
+        int costoI = f(j, ct, j+1, k-1, v);
         if(costoI < costo){
             costo = costoI;
             puestoMin = puestos[j];
@@ -53,7 +67,7 @@ int f(int provAnt, int costeAcum, int i, int k, vector<int>& v){
         v.pop_back();
     }
     RES[K-k] = puestoMin;
-    //dp[ant+1][i][k] = costo;
+    //dp[costeAcum][i][k] = costo;
     return costo;
 }
 
@@ -64,8 +78,9 @@ int main(){
         forn(i,N) cin >> puestos[i];
         vector<int> v; RES = vector<int>(K,-1);
         //---------------------
+
         //---------------------
-        cout << f(0,0,0,K,v) << "\n";
+        cout << f(-1,0,0,K,v) << "\n";
         forn(i,RES.size()) {
             cout << RES[i];
             if(i != RES.size()-1) cout << " ";
