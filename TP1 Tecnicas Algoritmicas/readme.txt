@@ -1,6 +1,6 @@
 
 Configuracion Geany para automatizar tests: 
-for x in "%e"*.in ; do echo $x; time "./%e" < "$x" ; echo "=======================";done
+for x in "%e"*.in ; do echo $x; cat $x; echo ---------- time "./%e" < "$x" ; echo "=======================";done
 
 Para consola linux:
 for x in *.in ; do echo $x ; time ./main < "$x";echo "==================";done
