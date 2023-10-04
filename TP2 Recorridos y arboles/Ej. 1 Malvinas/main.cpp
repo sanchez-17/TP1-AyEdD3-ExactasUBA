@@ -2,6 +2,27 @@
 #include <vector>
 #include <set>
 #include <utility> //pair
+
+/* Definiciones: 
+ *  G=(V, E) es Sistema Fragil si existe arista(puente) vw tq G' = (V, E - {vw}) no es conexo.
+ *  G es Robusto si no es Fragil
+ *  Un enlace(arista vw de E) es Importante si G'=(V, E-{vw}) es Fragil.
+ * Se da:
+ * 	N: cantidad de bases    <= 1e3
+ *  M: cantidad de aristas  <= 2.1e3
+ *  M aristas v w
+ * Se pide:
+ *  Dado G robusto determinar las aristas importantes
+ *Idea 
+ * Me fijo si hay puentes en el grafo inducido por sacar una arista vw
+ * Como G conexo M >= N - 1
+ * Algoritmo: O(M^2) = 4.1e6
+ * 	S vacio
+ * 	Por cada arista vw en E --> O(M)
+ * 		Si hay puentes -> O(M)
+ * 		   Añadir vw a S
+ *  retornar S
+ */
 using namespace std;
 int c, M, N;
 vector<set<int> > ady;
