@@ -14,11 +14,15 @@
  * Se pide:
  *  Dado G robusto determinar las aristas importantes
  *Idea 
- * Me fijo si hay puentes en el grafo inducido por sacar una arista vw
+ * Primero podemos generar arbol T DFS de G para clasificar aristas pues
+ * si vw es backEdge de T, entonces no es importante
+ * si vw es treeEdge de T, podria ser importante
+ * Me fijo si hay puentes en el grafo inducido por sacar una arista vw de E(T) a G
  * Como G conexo M >= N - 1
  * Algoritmo: O(M^2) = 4.1e6
+ *  Genero T con DFS y guardo conj. R = E(T)
  * 	S vacio
- * 	Por cada arista vw en E --> O(M)
+ * 	Por cada arista vw en R --> O(M)
  * 		Si hay puentes -> O(M)
  * 		   Añadir vw a S
  *  retornar S
