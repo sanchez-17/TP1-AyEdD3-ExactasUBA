@@ -1,17 +1,23 @@
 #include <bits/stdc++.h>
 #include <iostream>
-#include <vector>
-#include <utility>
-#include <algorithm>
-#define dd double double
 using namespace std;
-int N, M;
-int contador;
-vector<tuple<int,int,int>> aristasKruskal;
-vector<Aristas> aristas;
-int D, R, Cmax;
 
-//struct aristas
+//da bien el 2do y 3er caso de test. el 1ro no
+
+int N, M, contador, D, R, Dmax, Rmax;
+const int INF = 1e7;
+vector<tuple<int,int,int>> aristasKruskal;
+//long double Cmax;
+
+// Para saber el peso de las aristas en O(1)
+vector<vector<vector<int>> > peso;
+
+struct Arista{
+    Arista(int uu, int vv, int dist, int rep){ u = uu; v = vv; d = dist; r = rep; }
+    int u, v, d, r;
+};
+
+vector<Arista> Rutas; // Aristas originales
 
 struct DSU {
     DSU(int n){
@@ -40,44 +46,29 @@ struct DSU {
     //INV: si padre[v] != v entonces tamano[padre[v]] >= 2*tamano[v]
 };
 
-void kruskal(vector<tuple<int,int,int>>& E, int n){
+int kruskal(vector<tuple<int,int,int>>& E, int n){
     long long res = 0;
-    sort(E.begin(),E.end());
+    D = R = 0;
+    sort(E.begin(),E.end()); // Ordena segun el 1er elem, en este caso el peso
     DSU dsu(n);
 
     int aristas = 0;
-    for(auto [w,u,v] : E){
-        //u y v estan en distinta cc?
-        if(dsu.find(u) != dsu.find(v)){
-            dsu.unite(u,v);
-            res += w;
+    for(auto e : E){ // e  = [w,u,v]
+        //u y v estan en distinta cc
+        if(dsu.find(get<1>(e)) != dsu.find(get<2>(e))){
+            dsu.unite(get<1>(e), get<2>(e)); // Agrega arista u-v
+            res += get<0>(e); // Suma el peso de u-v
             aristas++;
+            D += peso[get<1>(e)][get<2>(e)][0];
+            R += peso[get<1>(e)][get<2>(e)][1];
         }
         if(aristas == n-1) break;
     }
 
-    if(aristas == n-1) cout<<res<<'\n';
-    else cout<<"IMPOSSIBLE\n";
+    if(aristas == n-1) return res;
+    else return INF; // Cuando no logro conectarlos, pero en nuestro caso siempre va a poder
 }
 
-/*
-int main(){
-    int n,m;
-    cin>>n>>m;
-    vector<tuple<int,int,int>> E(m); //(costo,u,v)
-    for(int i = 0; i < m; i++){
-        int u,v,w;
-        cin>>u>>v>>w;
-        u--, v--;
-        E[i] = {w,u,v};
-    }
-
-    kruskal(E,n);
-
-    return 0;
-}
-
-*/
 // para cada c
 // vamos guardando/actualizando las aristas con el nuevo "peso"
 // las ordenamos
@@ -88,30 +79,31 @@ int main(){
 // queremos contar cuantas "iteraciones" (busquedas binarias?) hace.
 // si ya hizo, por ejemplo, 20-40, parar y devolvemos la D y R correspondientes al ultimo Cmax encontrado
 
-void busqueda_binaria(dd a, dd b){
-    while(b-a>1 && contador < 40){
+void busqueda_binaria(long double a, long double b){
+    while(contador < 70){//20 - 45 no c
         contador++;
-        dd mid = ((a+b)/2);
+        long double mid = ((a+b)/2);
         //con las aristas creamos nuevas para el kruskal (usa vector tripla)
         aristasKruskal.clear(); //borro las que ya estaban
-        for(Arista a : aristas){
-            aristasKruskal.push_back({a.u, a.v, mid*a.r - a.d}); //vertice u, vertice v, nuevo peso
+        for(Arista ruta : Rutas){
+            aristasKruskal.push_back({mid*ruta.r - ruta.d, ruta.u, ruta.v}); //nuevo peso, vertice u, vertice v
         }
-        if(kruskal(aristasKruskal) < 0){
+        if(kruskal(aristasKruskal, N) <= 0){
             a = mid;
-            Cmax = mid; //el mejor c hasta ahora
+            //Cmax = mid; //el mejor c hasta ahora. no es necesario guardarlo si no comparamos con c
             //actualizar D y R
-            // D = 
-            // R =
-        }else{
+            Dmax = D;
+            Rmax = R;
+        }else{ //cuando es mayor, quiero uno mas chico
             b=mid;
         }
     }
 }
 
 void solve(){
-    busqueda_binaria(0, 1e11);
-    cout<<D<<" "<<R<<endl;
+    busqueda_binaria(1, 1e10);
+    cout<<"RES: "<<endl;
+    cout<<Dmax<<" "<<Rmax<<endl;
 }
 
 int main() {
@@ -119,12 +111,24 @@ int main() {
     cin >> C;
     for(int c = 0; c < C; c++){
         cin >> N >> M;
+        Rutas.clear();
+        peso = vector<vector<vector<int>> >(N, vector<vector<int>>(N, vector<int>(2,-1)));
         for(int m = 0; m < M; m++){
             int u, v, d, r;
             cin >> u >> v >> d >> r;
+            u--;
+            v--;
+            peso[u][v][0] = d;
+            peso[v][u][0] = d;
+            peso[u][v][1] = r;
+            peso[v][u][1] = r;
+            Arista nueva(u, v ,d, r);
+            Rutas.push_back(nueva);
         }
         contador = 0;
-        aristasKruskal.clear(); //las aristas para el kruskal con la suma
+        Dmax = 0;
+        Rmax = 0;
+        aristasKruskal.clear(); //las aristas para el kruskal
         solve();
     }
     return 0;
