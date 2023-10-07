@@ -46,10 +46,10 @@ struct DSU {
     //INV: si padre[v] != v entonces tamano[padre[v]] >= 2*tamano[v]
 };
 
-int kruskal(vector<tuple<int,int,int>>& E, int n){
-    long long res = 0;
+long double kruskal(vector<tuple<int,int,int>>& E, int n){
+    long double res = 0;
     D = R = 0;
-    sort(E.begin(),E.end()); // Ordena segun el 1er elem, en este caso el peso
+    sort(E.rbegin(),E.rend()); // Ordena segun el 1er elem, en este caso el peso
     DSU dsu(n);
 
     int aristas = 0;
@@ -80,7 +80,7 @@ int kruskal(vector<tuple<int,int,int>>& E, int n){
 // si ya hizo, por ejemplo, 20-40, parar y devolvemos la D y R correspondientes al ultimo Cmax encontrado
 
 void busqueda_binaria(long double a, long double b){
-    while(contador < 70){//20 - 45 no c
+    while(contador < 70){
         contador++;
         long double mid = ((a+b)/2);
         //con las aristas creamos nuevas para el kruskal (usa vector tripla)
@@ -88,7 +88,7 @@ void busqueda_binaria(long double a, long double b){
         for(Arista ruta : Rutas){
             aristasKruskal.push_back({mid*ruta.r - ruta.d, ruta.u, ruta.v}); //nuevo peso, vertice u, vertice v
         }
-        if(kruskal(aristasKruskal, N) <= 0){
+        if(kruskal(aristasKruskal, N) <= 0){ // <= 0 ?
             a = mid;
             //Cmax = mid; //el mejor c hasta ahora. no es necesario guardarlo si no comparamos con c
             //actualizar D y R
@@ -133,3 +133,4 @@ int main() {
     }
     return 0;
 }
+
