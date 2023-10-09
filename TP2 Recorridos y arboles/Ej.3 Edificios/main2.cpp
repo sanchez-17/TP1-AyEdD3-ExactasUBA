@@ -2,12 +2,9 @@
 #include <iostream>
 using namespace std;
 
-//da bien el 2do y 3er caso de test. el 1ro no
-
 int N, M, contador, D, R, Dmax, Rmax;
 const int INF = 1e7;
-vector<tuple<int,int,int>> aristasKruskal;
-//long double Cmax;
+vector<tuple<long double,int,int>> aristasKruskal;
 
 // Para saber el peso de las aristas en O(1)
 vector<vector<vector<int>> > peso;
@@ -46,9 +43,10 @@ struct DSU {
     //INV: si padre[v] != v entonces tamano[padre[v]] >= 2*tamano[v]
 };
 
-long double kruskal(vector<tuple<int,int,int>>& E, int n){
+long double kruskal(vector<tuple<long double,int,int>>& E, int n){
     long double res = 0;
-    D = R = 0;
+    D = 0;
+    R = 0;
     sort(E.rbegin(),E.rend()); // Ordena segun el 1er elem, en este caso el peso
     DSU dsu(n);
 
@@ -80,7 +78,7 @@ long double kruskal(vector<tuple<int,int,int>>& E, int n){
 // si ya hizo, por ejemplo, 20-40, parar y devolvemos la D y R correspondientes al ultimo Cmax encontrado
 
 void busqueda_binaria(long double a, long double b){
-    while(contador < 70){
+    while(contador < 40){
         contador++;
         long double mid = ((a+b)/2);
         //con las aristas creamos nuevas para el kruskal (usa vector tripla)
@@ -88,9 +86,10 @@ void busqueda_binaria(long double a, long double b){
         for(Arista ruta : Rutas){
             aristasKruskal.push_back({mid*ruta.r - ruta.d, ruta.u, ruta.v}); //nuevo peso, vertice u, vertice v
         }
-        if(kruskal(aristasKruskal, N) <= 0){ // <= 0 ?
+        long double suma = kruskal(aristasKruskal, N);
+        if(suma <= 0){ // <= 0 ?
             a = mid;
-            //Cmax = mid; //el mejor c hasta ahora. no es necesario guardarlo si no comparamos con c
+            //Cmax = mid;
             //actualizar D y R
             Dmax = D;
             Rmax = R;
@@ -101,8 +100,7 @@ void busqueda_binaria(long double a, long double b){
 }
 
 void solve(){
-    busqueda_binaria(1, 1e10);
-    cout<<"RES: "<<endl;
+    busqueda_binaria(0, 1e11);
     cout<<Dmax<<" "<<Rmax<<endl;
 }
 
@@ -128,7 +126,6 @@ int main() {
         contador = 0;
         Dmax = 0;
         Rmax = 0;
-        aristasKruskal.clear(); //las aristas para el kruskal
         solve();
     }
     return 0;
