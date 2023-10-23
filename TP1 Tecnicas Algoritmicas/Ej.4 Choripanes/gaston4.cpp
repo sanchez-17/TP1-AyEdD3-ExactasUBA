@@ -2,8 +2,7 @@
 #include <vector>
 #include <string>
 using namespace std;
-#define fastio ios_base::sync_with_stdio(0); cin.tie(0); cin.exceptions(cin.fai\
-lbit);
+#define fastio ios_base::sync_with_stdio(0); cin.tie(0); cin.exceptions(cin.failbit);
 #define forr(i,a,b) for(int i = (int) a; i < (int) b; i++)
 #define forn(i,n) forr(i,0,n)
 
@@ -31,7 +30,21 @@ int costo(vector<int>& v){
     }
     return costo;
 }
-
+/* F indica el minimo costo de poner k proveedurias a partir del puesto i
+ * 
+ * 
+ * 			| 
+ * 			|
+ * f(i,k) = ┤ 
+ * 			|
+ * 			|
+ * 			└ 
+ * 
+ * 
+ * 
+ * 
+ * 
+ */
 int f(int provAnt, int costeAcum, int i, int k, vector<int>& v){
     //if(dp[costeAcum][i][k] != -1) return dp[costeAcum][i][k];
     if(k == 0){
