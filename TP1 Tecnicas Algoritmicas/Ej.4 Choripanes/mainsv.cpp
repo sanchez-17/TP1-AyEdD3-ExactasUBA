@@ -32,19 +32,19 @@ int costo(vector<int>& v){
     return costo;
 }
 /* F indica el minimo costo de poner k proveedurias a partir del puesto i
- * 
- *           ┌ 
+ *
+ *           ┌
  *  		 | C(p)                                              si k=0 , //calcula costo de la disposicion p de proveedurias
- *  		 | 
- * f(i,k,p)= ┤ 
- *  		 | min_{i <= j <= N-k}( f(j+1, k-1, p U puesto_j) )  cc //Prueba a poner la prov. j-esima en el puesto i-esimo 
  *  		 |
- *  		 └ 
- * 
- * 
- * 
- * 
- * 
+ * f(i,k,p)= ┤
+ *  		 | min_{i <= j <= N-k}( f(j+1, k-1, p U puesto_j) )  cc //Prueba a poner la prov. j-esima en el puesto i-esimo
+ *  		 |
+ *  		 └
+ *
+ *
+ *
+ *
+ *
  */
 int f(int i, int k, vector<int>& v){
     //if(dp[i][k]!= -1) return dp[i][k];
@@ -54,8 +54,8 @@ int f(int i, int k, vector<int>& v){
         v.push_back(puestos[j]);
         int costoI = f(j+1,k-1,v);
         if(costoI < costo){
-            costo = costoI;
-            puestoMin = puestos[j];
+            costo = costoI; 
+            puestoMin = puestos[j]; //Como pruebo puestos de izq a der, cuando agarre el primer minimo se queda con el. Lex.menor
         }
         v.pop_back();
     }

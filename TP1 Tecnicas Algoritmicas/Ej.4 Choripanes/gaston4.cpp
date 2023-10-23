@@ -32,9 +32,9 @@ int costo(vector<int>& v){
 }
 /* F indica el minimo costo de poner k proveedurias a partir del puesto i
  * 
- * 
+ *          ┌ 
+ * 			| costeAcum             si k=0
  * 			| 
- * 			|
  * f(i,k) = ┤ 
  * 			|
  * 			|
