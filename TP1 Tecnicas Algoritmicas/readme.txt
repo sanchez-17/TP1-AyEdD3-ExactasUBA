@@ -1,4 +1,7 @@
 
+g++ -std=c++11 -g -O2 -Wconversion -Wshadow -Wall -Wextra -D_GLIBCXX_DEBUG -c "%f"
+g++ -std=c++11 -g -O2 -Wconversion -Wshadow -Wall -Wextra -D_GLIBCXX_DEBUG -o "%e" "%f"
+
 Configuracion Geany para automatizar tests: 
 for x in "%e"*.in ; do echo $x; cat $x; echo ---------- time "./%e" < "$x" ; echo "=======================";done
 
