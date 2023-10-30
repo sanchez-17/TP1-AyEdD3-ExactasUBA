@@ -6,6 +6,14 @@ const int INF = 1e6;
 bool IMPOSIBLE;
 vector<vector<int>> M, ady;
 
+/*
+ * Idea:
+ * Chequeamos si la matriz de entrada M es FW(Ej. 13 Practica 4). Representa la matriz de caminos minimos entre los nodos
+ * Si lo es, armamos el grafo resultante en G'= (V,E) = Ady donde para toda arista e in E: w(e) = 1.
+ * Luego aplicamos Floyd-Warshall sobre G' para obtener la matriz que retornamos como respuesta. Pues representa los caminos minimos(cant de aristas minimas) entre los nodos.
+ *
+ */
+
 void FW(){
     for(int k = 0; k < N; k++)
         for(int i = 1; i < N; i++)
