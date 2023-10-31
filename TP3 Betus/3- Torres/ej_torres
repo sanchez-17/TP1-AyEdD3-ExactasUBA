@@ -1,31 +1,80 @@
 /******************************************************************************
 
-https://www.spoj.com/AED32323/problems/main/ 
+https://www.spoj.com/AED32323/problems/main/
 
 *******************************************************************************/
 #include <algorithm>
 #include <cstdio>
 #include <vector>
 #include <queue>
-#include <cstring> //para memset
+#include <iostream>
+//#include <cstring> //para memset
 using namespace std;
 int N;
-vector<vector<int>> intersecciones; //cada subfila y las col con las que interseca
-int cantSubfilas; //no creo q sea necesario pero capaz para debuggear
+int cantSubfilas;
 int cantSubcol;
-int subfilas[N][N]; //reconstruyo el tablero pero cada casillero tiene la fila a la que pertenece
-//esto para poder saber las intersecciones con las columnas.
+vector<vector<int>> subfilas; // Reconstruyo el tablero pero cada casillero tiene la fila a la que pertenece. Para saber las intersecciones con las columnas.
+vector<vector<int>> digrafo; // Los enlaces de subfilas a subcol
 int hueco = -1;
+//EK:
+int INF = 1e6;
+int n;
+vector<vector<int>> capacity;
+vector<vector<int>> adj;
 
-int main()
-{
+
+int bfs(int s, int t, vector<int>& parent) {
+    fill(parent.begin(), parent.end(), -1);
+    parent[s] = -2;
+    queue<pair<int, int>> q;
+    q.push({s, INF});
+
+    while (!q.empty()) {
+        int cur = q.front().first;
+        int flow = q.front().second;
+        q.pop();
+
+        for (int next : adj[cur]) {
+            if (parent[next] == -1 && capacity[cur][next]) {
+                parent[next] = cur;
+                int new_flow = min(flow, capacity[cur][next]);
+                if (next == t)
+                    return new_flow;
+                q.push({next, new_flow});
+            }
+        }
+    }
+
+    return 0;
+}
+
+int maxflow(int s, int t) {
+    int flow = 0;
+    vector<int> parent(n);
+    int new_flow;
+
+    while (new_flow = bfs(s, t, parent)) {
+        flow += new_flow;
+        int cur = t;
+        while (cur != s) {
+            int prev = parent[cur];
+            capacity[prev][cur] -= new_flow;
+            capacity[cur][prev] += new_flow;
+            cur = prev;
+        }
+    }
+
+    return flow;
+}
+
+int main(){
     int c;
+    cin >> c;
     for(int i = 0; i < c; i++){
-        cin>>N;
+        cin >> N;
         cantSubfilas = 0;
         cantSubcol = 0;
-        
-        //recorro para 
+        subfilas = vector<vector<int>>(N, vector<int>(N));
         for(int j = 0; j < N; j++){
             int casilla;
             for(int k = 0; k < N; k++){
@@ -41,29 +90,53 @@ int main()
                 cantSubfilas++;
             } //osea si la casilla N no es hueco, pq sino estaria contando 2 veces
         }
-        intersecciones =  vector<vector<int>>(cantSubfilas);
-        
-        //ahora recorro para las subcolumnas
-        //me gustaria recorrelo por columna..
+        //ver cuantas subfilas hay al terminar
+        digrafo = vector<vector<int>>(cantSubfilas);
+        int num = 1; // Para id de columna
         for(int j = 0; j < N; j++){//col
             for(int k = 0; k < N; k++){//fil
                 int subfila = subfilas[k][j];
                 if(subfila != hueco){
-                    int subcol = cantSubcol + cantSubfilas;//quiero darles un id unico
-                    intersecciones[subfila].push_back(subcol);
-                    /*
-                    vector<int> subcolInter;
-                    intersecciones.push_back(subcolInter);
-                    intersecciones[subcol].push_back(t);
-                    
-                    ojo q queremos list ady undirected. y que no sabemos cual es t todavia
-                    */
+                    int subcol = num + cantSubfilas;
+                    //num++;
+                    digrafo[subfila].push_back(subcol);
                 }else{
                     cantSubcol++;
+                    num++;
                 }
             }
-            if(subfila[N-1][j] != hueco) cantSubcol++;
+            if(subfilas[N-1][j] != hueco) cantSubcol++;
         }
+
+        int cantNodos = cantSubfilas + cantSubcol + 2;
+        int source = cantNodos - 2;
+        int sink = cantNodos - 1;
+
+        adj = vector<vector<int>>(cantNodos);
+        capacity = vector<vector<int>>(cantNodos, vector<int>(cantNodos, 0));
+
+        // Lleno capacity y adj
+        for(int subfila = 0; subfila < cantSubfilas; subfila++){
+            for(auto subcol : digrafo[subfila]){
+                capacity[subfila][subcol] = 1;
+                adj[subfila].push_back(subcol);
+                adj[subcol].push_back(subfila);
+            }
+            // Une el source con las subfilas
+            capacity[source][subfila] = 1;
+            adj[source].push_back(subfila);
+            adj[subfila].push_back(source);
+        }
+
+        // Falta unir las subcolumnas al sink
+        for(int subcol = cantSubfilas + 1; subcol < cantNodos - 1; subcol++){
+            capacity[subcol][sink] = 1;
+            adj[sink].push_back(subcol);
+            adj[subcol].push_back(sink);
+        }
+
+        n = cantNodos;
+        cout << "res: "<< maxflow(source, sink) << endl;
     }
     return 0;
 }
