@@ -1,14 +1,8 @@
-/******************************************************************************
-
-https://www.spoj.com/AED32323/problems/main/
-
-*******************************************************************************/
 #include <algorithm>
 #include <cstdio>
 #include <vector>
 #include <queue>
 #include <iostream>
-//#include <cstring> //para memset
 using namespace std;
 int N;
 int cantSubfilas;
@@ -121,7 +115,7 @@ int main(){
                     if(tablero[k-1][j] == 0){
                         num++;
                     }
-                }else{//no soy hueco
+                }else{
                     digrafo[subfilas[k][j]].push_back(num);
                 };
             }
