@@ -15,6 +15,7 @@ int cantSubfilas;
 int cantSubcol;
 vector<vector<int>> subfilas; // Reconstruyo el tablero pero cada casillero tiene la fila a la que pertenece. Para saber las intersecciones con las columnas.
 vector<vector<int>> digrafo; // Los enlaces de subfilas a subcol
+vector<vector<int>> tablero;
 int hueco = -1;
 //EK:
 int INF = 1e6;
@@ -75,37 +76,53 @@ int main(){
         cantSubfilas = 0;
         cantSubcol = 0;
         subfilas = vector<vector<int>>(N, vector<int>(N));
+
+        //hay que guardarse la matriz y despues recorrerla tomando en cuenta que en el cambio 0 a 1 hay una nueva fila
+        tablero = vector<vector<int>>(N, vector<int>(N));
         for(int j = 0; j < N; j++){
-            int casilla;
             for(int k = 0; k < N; k++){
-                cin>>casilla;
-                if(casilla == 1){
-                    cantSubfilas++;
+                cin >> tablero[j][k];
+            }
+        }
+
+        for(int j = 0; j < N; j++){
+            if(tablero[j][0] == 1){
+                subfilas[j][0] = hueco;
+            }else{
+                subfilas[j][0] = cantSubfilas;
+            }
+            for(int k = 1; k < N; k++){
+                if(tablero[j][k] == 1){
                     subfilas[j][k] = hueco;
+                    if(tablero[j][k-1] == 0){
+                        cantSubfilas++;
+                    }
                 }else{
                     subfilas[j][k] = cantSubfilas;
                 }
             }
-            if(casilla != 1){
-                cantSubfilas++;
-            } //osea si la casilla N no es hueco, pq sino estaria contando 2 veces
+                if(tablero[j][N-1] != 1){
+                    cantSubfilas++;
+                }
         }
+
         //ver cuantas subfilas hay al terminar
         digrafo = vector<vector<int>>(cantSubfilas);
-        int num = 1; // Para id de columna
+        int num = cantSubfilas; // Para id de columna
         for(int j = 0; j < N; j++){//col
             for(int k = 0; k < N; k++){//fil
                 int subfila = subfilas[k][j];
                 if(subfila != hueco){
-                    int subcol = num + cantSubfilas;
-                    //num++;
-                    digrafo[subfila].push_back(subcol);
+                    digrafo[subfila].push_back(num);
                 }else{
                     cantSubcol++;
                     num++;
                 }
             }
-            if(subfilas[N-1][j] != hueco) cantSubcol++;
+            if(subfilas[N-1][j] != hueco){
+                cantSubcol++;
+                num++;
+            }
         }
 
         int cantNodos = cantSubfilas + cantSubcol + 2;
@@ -129,7 +146,7 @@ int main(){
         }
 
         // Falta unir las subcolumnas al sink
-        for(int subcol = cantSubfilas + 1; subcol < cantNodos - 1; subcol++){
+        for(int subcol = cantSubfilas; subcol < cantNodos - 1; subcol++){
             capacity[subcol][sink] = 1;
             adj[sink].push_back(subcol);
             adj[subcol].push_back(sink);
