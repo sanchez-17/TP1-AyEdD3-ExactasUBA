@@ -146,7 +146,7 @@ int main(){
         }
 
         // Falta unir las subcolumnas al sink
-        for(int subcol = cantSubfilas; subcol < cantNodos - 1; subcol++){
+        for(int subcol = cantSubfilas; subcol < cantNodos - 2; subcol++){
             capacity[subcol][sink] = 1;
             adj[sink].push_back(subcol);
             adj[subcol].push_back(sink);
