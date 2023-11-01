@@ -1,14 +1,8 @@
-/******************************************************************************
-
-https://www.spoj.com/AED32323/problems/main/
-
-*******************************************************************************/
 #include <algorithm>
 #include <cstdio>
 #include <vector>
 #include <queue>
 #include <iostream>
-//#include <cstring> //para memset
 using namespace std;
 int N;
 int cantSubfilas;
@@ -77,7 +71,7 @@ int main(){
         cantSubcol = 0;
         subfilas = vector<vector<int>>(N, vector<int>(N));
 
-        //hay que guardarse la matriz y despues recorrerla tomando en cuenta que en el cambio 0 a 1 hay una nueva fila
+        // Nos guardarmos la matriz y despues la recorrermos tomando en cuenta que en el cambio 0 a 1 hay una nueva fila
         tablero = vector<vector<int>>(N, vector<int>(N));
         for(int j = 0; j < N; j++){
             for(int k = 0; k < N; k++){
@@ -101,30 +95,37 @@ int main(){
                     subfilas[j][k] = cantSubfilas;
                 }
             }
-                if(tablero[j][N-1] != 1){
-                    cantSubfilas++;
-                }
+            if(tablero[j][N-1] != 1){
+                cantSubfilas++;
+            }
         }
 
-        //ver cuantas subfilas hay al terminar
         digrafo = vector<vector<int>>(cantSubfilas);
         int num = cantSubfilas; // Para id de columna
-        for(int j = 0; j < N; j++){//col
-            for(int k = 0; k < N; k++){//fil
-                int subfila = subfilas[k][j];
-                if(subfila != hueco){
-                    digrafo[subfila].push_back(num);
-                }else{
-                    cantSubcol++;
-                    num++;
-                }
+
+        // Vemos las intersecciones entre filas y col
+        for(int j = 0; j < N; j++){
+
+            if(tablero[0][j] != 1){
+                digrafo[subfilas[0][j]].push_back(num);
             }
-            if(subfilas[N-1][j] != hueco){
-                cantSubcol++;
+
+            for(int k = 1; k < N; k++){
+                if(tablero[k][j] == 1){
+                    if(tablero[k-1][j] == 0){
+                        num++;
+                    }
+                }else{
+                    digrafo[subfilas[k][j]].push_back(num);
+                };
+            }
+
+            if(tablero[N-1][j] != 1){
                 num++;
             }
         }
 
+        cantSubcol = num - cantSubfilas;
         int cantNodos = cantSubfilas + cantSubcol + 2;
         int source = cantNodos - 2;
         int sink = cantNodos - 1;
@@ -146,18 +147,17 @@ int main(){
         }
 
         // Falta unir las subcolumnas al sink
-        for(int subcol = cantSubfilas; subcol < cantNodos - 1; subcol++){
+        for(int subcol = cantSubfilas; subcol < cantNodos - 2; subcol++){
             capacity[subcol][sink] = 1;
             adj[sink].push_back(subcol);
             adj[subcol].push_back(sink);
         }
 
         n = cantNodos;
-        cout << "res: "<< maxflow(source, sink) << endl;
+        cout << maxflow(source, sink) << endl;
     }
     return 0;
 }
-
 
 
 
