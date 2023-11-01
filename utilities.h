@@ -137,4 +137,58 @@ bool esMagico(vector<vector<int>>& C){
 		int sumMag = (pow(3,n) + n) / 2;
 		return  porFila(C,sumMag) && porColumna(C,sumMag) && porDiagonal(C,sumMag);
 }
+
+/*==============================*/
+/* Auxiliares ============================================================= */
+
+template<class T>
+using memoize = vector<vector<T>>;
+
+/* Imprime un contenedor de elementos simples */
+template<typename Container>
+void printc(const Container& container) {
+    cout << "<";
+    auto currIt = begin(container);
+    const auto end = std::end(container);
+    if (currIt != end) cout << *currIt++;
+    while (currIt != end) cout << ", " << *currIt++;
+    cout << ">" << endl;
+}
+
+/* Caso base de la recursión (último elemento) */
+template <size_t Index, typename... Args>
+typename std::enable_if<Index == sizeof...(Args)>::type
+print_tuple_element(std::ostream& os, const std::tuple<Args...>& t) {
+
+}
+
+/* Caso recursivo. (Todos los elementos, menos el último)*/
+template <size_t Index, typename... Args>
+typename std::enable_if<Index < sizeof...(Args)>::type
+print_tuple_element(std::ostream& os, const std::tuple<Args...>& t) {
+    if (Index > 0)
+        os << ", ";
+    os << std::get<Index>(t);
+    print_tuple_element<Index + 1>(os, t);
+}
+
+/* Funcion para imprimir tuplas variádicas */
+// TODO: tuple -> string
+template <typename... Args>
+void print_tuple(std::ostream& os, const std::tuple<Args...>& t) {
+    os << "(";
+    print_tuple_element<0>(os, t); // Entry point a la recursión.
+    os << ")";
+}
+
+/* Funcion especializada para imprimir (int, int, int) */
+void print_tuples(vector<tuple<int, int, int>> ts) {
+    cout << "<";
+    for (size_t i = 0; i < ts.size(); ++i) {
+        print_tuple(cout, ts[i]);
+        if (i < ts.size() - 1) cout << ", ";
+    }
+    cout << ">" << endl;
+}
+
 #endif
