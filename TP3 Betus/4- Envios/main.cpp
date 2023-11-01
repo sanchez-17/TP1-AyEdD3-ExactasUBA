@@ -76,23 +76,30 @@ int EyK(int s, int t){
     return flow;
 }
 
-int busqueda_binaria(int a, int b){
-    int cont = 0, mid;
-    while(cont < 30 ){
-        cont++; mid =(a+b)/2;
+void busqueda_binaria(int a, int b){
+    int cont = 0;
+    while(cont < 100 ){
+        cont++;
+        C =(a+b)/2;
         //Actualizo las capacidades de las aristas c(e)//C
         for(int i = 0; i < N; i++)
-            for (Arista& e: ady[i])
+            for (Arista& e: ady[i]) {
                 e.w = e.c / C;
-        if (EyK(0,N-1) >= X) b = mid;
-        else                     a = mid;
+                capacidades[i][e.v] = e.c / C;
+            }
+        int flow = EyK(0,N-1);
+        cout << flow << endl;
+        if (flow >= X)
+            b = C;
+        else          
+            a = C;
     }
-    return mid;
 }
 
 int solve(){
-    int cantMaxHerramientas = busqueda_binaria(1, 1e9);
-    return X * cantMaxHerramientas;
+    busqueda_binaria(1, 1e9);
+    cout << "jejejej" << X << " " << C << endl;
+    return X * C;
 }
 
 int main(){
@@ -111,7 +118,7 @@ int main(){
             e2.w = c;
             ady[v].push_back(e1);
             ady[w].push_back(e2);
-            capacidades[v][w] = 1;
+            capacidades[v][w] = c;
         }
         cout << solve() << endl;
         t--;
