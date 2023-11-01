@@ -1,10 +1,19 @@
 #include <algorithm>
 #include <iostream>
 #include <vector>
-#define arista pair<int, int>
+#include <queue>
 using namespace std;
+int C, t, N, M, X;
+const int INF = 1e9;
 vector<vector<int>> capacidades;
-vector<vector<arista>> ady;
+struct Arista{
+    Arista(int _v, int _c){
+        v = _v; c = _c;
+    }
+    int v, c, w;
+};
+vector<vector<Arista>> ady;
+
 /* Cada calle es una arista de capacidad c(e)
  * Dado un valor C, la cantidad max. de herramientas que puede llevar cada persona es div_entera(c(e), C).
  * Ejemplo: para un calle e, c(e) = 13. C = 5. div_entera(13,2) = 2
@@ -22,70 +31,100 @@ vector<vector<arista>> ady;
  *
  */
 
+int bfs(int s, int t, vector<int>& parent) {
+    fill(parent.begin(), parent.end(), -1);
+    parent[s] = -2;
+    queue<pair<int, int>> q;
+    q.push({s, INF});
+
+    while (!q.empty()) {
+        int u = q.front().first;
+        int flow = q.front().second;
+        q.pop();
+
+        for (auto next : ady[u]) { //cur->next
+            int v = next.v;
+            if (parent[v] == -1 && capacidades[u][v]) {
+                parent[v] = u;
+                int new_flow = min(flow, capacidades[u][v]);
+                if (v == t)
+                    return new_flow;
+                q.push({v, new_flow});
+            }
+        }
+    }
+
+    return 0;
+}
+
 int EyK(int s, int t){
     int flow = 0;
-    vector<int> parent(n);
+    vector<int> parent(N);
     int new_flow;
 
     while (new_flow = bfs(s, t, parent)) {
         flow += new_flow;
-        int cur = t;
-        while (cur != s) {
-            int prev = parent[cur];
-            capacidades[prev][cur] -= new_flow;
-            capacidades[cur][prev] += new_flow;
-            cur = prev;
+        int v = t;
+        while (v != s) {
+            int u = parent[v];
+            capacidades[u][v] -= new_flow;
+            capacidades[v][u] += new_flow;
+            v = u;
         }
     }
 
     return flow;
 }
 
-void busqueda_binaria(long double a, long double b){
+void busqueda_binaria(int a, int b){
     int cont = 0;
-    while(cont < 50 ){
-        // para salvar casos como el de la diapo
+    while(cont < 100 ){
         cont++;
-        long double mid =(a+b)/2;
-        //con las aristas creamos nuevas para el kruskal (usa vector tripla)
-        for (Arista& e: aristas)
-            e.w = mid * e.r - e.d; //Actualizo el nuevo peso de las aristas
-        if(EyK(0,N-1)){
-            a = mid;
-            Dmax = D;
-            Rmax = R;
-        }else{ //cuando es mayor, quiero uno mas chico
-            b=mid;
-        }
+        C =(a+b)/2;
+        //Actualizo las capacidades de las aristas c(e)//C
+        for(int i = 0; i < N; i++)
+            for (Arista& e: ady[i]) {
+                e.w = e.c / C;
+                capacidades[i][e.v] = e.c / C;
+            }
+        int flow = EyK(0,N-1);
+        cout << flow << endl;
+        if (flow >= X)
+            b = C;
+        else          
+            a = C;
     }
 }
 
-void solve(){
-
+int solve(){
+    busqueda_binaria(1, 1e9);
+    cout << "jejejej" << X << " " << C << endl;
+    return X * C;
 }
 
 int main(){
-    int C,N,M;
-    cin >> C;
-    while(C>0){
-        cin >> N >> M;
+    cin >> t;
+    while(t>0){
+        cin >> N >> M >> X;
         capacidades = vector<vector<int>>(N, vector<int>(N, 0));
-        ady = vector<vector<arista>>(N+2);
+        ady = vector<vector<Arista>>(N);
         for(int i = 0; i < M; i++){
             int v, w, c;
             cin >> v >> w >> c;
             v--; w--;
-            ady[v].push_back({w,c});
+            Arista e1(w , c);
+            Arista e2(v, c);
+            e1.w = c;
+            e2.w = c;
+            ady[v].push_back(e1);
+            ady[w].push_back(e2);
+            capacidades[v][w] = c;
         }
-        //Modelado del grafo
-
-
-        solve();
-        C--;
+        cout << solve() << endl;
+        t--;
     }
     return 0;
 }
-
 
 
 
