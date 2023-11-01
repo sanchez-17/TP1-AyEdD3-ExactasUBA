@@ -78,7 +78,7 @@ int EyK(int s, int t){
 
 void busqueda_binaria(int a, int b){
     int cont = 0;
-    while(cont < 100 ){
+    while(cont < 75 ){
         cont++;
         C =(a+b)/2;
         //Actualizo las capacidades de las aristas c(e)//C
@@ -88,17 +88,17 @@ void busqueda_binaria(int a, int b){
                 capacidades[i][e.v] = e.c / C;
             }
         int flow = EyK(0,N-1);
-        cout << flow << endl;
         if (flow >= X)
-            b = C;
-        else          
             a = C;
+        else
+            b = C;
     }
 }
 
 int solve(){
-    busqueda_binaria(1, 1e9);
-    cout << "jejejej" << X << " " << C << endl;
+    int flow = EyK(0,N-1);
+    if(flow >= X) busqueda_binaria(1, 1e9);
+    else C = 0;
     return X * C;
 }
 
