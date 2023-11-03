@@ -95,13 +95,12 @@ int busqueda_binaria(int a, int b){
         actualizarPesosEnG(C);
         int flow = EyK(0,N-1);
         actualizarPesosEnG(1);
-        if(flow == X) return C; // si ya lo encontre
-        if (flow >= X)
-            a = C;
-        else
+        if (flow < X)//P(C) falso: "Si x personas pueden transportar C objetos por G hasta t, pueden transportar C-1"
             b = C;
+        else
+            a = C;
     }
-    return C;
+    return a; //El maximo valor de C que cumple P(C) es a
 }
 
 int solve(int cota){
