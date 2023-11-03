@@ -3,7 +3,7 @@
 #include <vector>
 #include <queue>
 using namespace std;
-int t, N, M, X;
+int N, M, X;
 const int INF = 1e9;
 vector<vector<int>> capacidades;
 struct Arista{
@@ -34,11 +34,12 @@ vector<vector<Arista>> ady,adyAux;
 //version con busqueda binaria no dependiente de cant de iteraciones
 
 void actualizarPesosEnG(int c){
+    capacidades = vector<vector<int>>(N, vector<int>(N, 0));
     //Actualizo las capacidades de las aristas a c(e)/C
     for(int i = 0; i < N; i++)
         for (Arista& e: adyAux[i]) {
             capacidades[i][e.v] = e.c / c;
-            capacidades[e.v][i] = 0;
+            //capacidades[e.v][i] = 0;
         }
 }
 
@@ -89,12 +90,12 @@ int EyK(int s, int t){
 
 int busqueda_binaria(int a, int b){
     int C;
-    while(b - a > 1){ //P(a) verdadero
+    while(b - a > 1){ //P(a) verdadero, P(b) falso
         C =(a+b)/2;
         //Actualizo las capacidades de las aristas a c(e)/C
         actualizarPesosEnG(C);
         int flow = EyK(0,N-1);
-        actualizarPesosEnG(1);
+        //actualizarPesosEnG(1);
         if (flow < X) //P(C) falso: "Si x personas pueden transportar C objetos por G hasta t, pueden transportar C-1"
             b = C;
         else
@@ -107,14 +108,15 @@ int solve(){
     int flow = EyK(0,N-1), res;
     //Restauramos los valores iniciales de las capacidades
     actualizarPesosEnG(1);
-    if(flow >= X) res = busqueda_binaria(0, flow);
+    if(flow >= X) res = busqueda_binaria(0, flow + 1);
     else res = 0;
     return X * res;
 }
 
 int main(){
+    int t;
     cin >> t;
-    while(t>0){
+    while(t--){
         cin >> N >> M >> X;
         capacidades = vector<vector<int>>(N, vector<int>(N, 0));
         ady = vector<vector<Arista>>(N);
@@ -131,8 +133,6 @@ int main(){
             capacidades[v][w] = c;
         }
         cout << solve() << endl;
-        t--;
     }
     return 0;
 }
-
