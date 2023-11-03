@@ -107,8 +107,7 @@ int solve(int cota){
     int flow = EyK(0,N-1), res;
     //Restauramos los valores iniciales de las capacidades
     actualizarPesosEnG(1);
-    if (flow == X) return X;
-    else if(flow > X) res = busqueda_binaria(0, 2*cota);
+    if(flow >= X) res = busqueda_binaria(0, 2*cota);
     else res = 0;
     return X * res;
 }
