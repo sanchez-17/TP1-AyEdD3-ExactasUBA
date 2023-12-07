@@ -7,9 +7,11 @@ int N, M, D, R, Dmax, Rmax;
 const int INF = 1e9, Dcota = 1e6;
 
 //Quiero el C = D/R que cumpla
-// Sum(d_i)/ Sum(r_i) >= C
+// Saber si existe arbol T 
+// Sum(e_d)/ Sum(e_r) >= C  : tq e arista de T
 // Desarrollando queda
-// 0 >= Sum(C . r_i - d_i) = f, y f considero el peso de AGM de G' donde e en E' tienen peso w(e) = C . r_i - d_i
+// 0 >= Sum(C . e_r - e_d) = f, y f considero el peso de AGM de G' donde e en E' tienen peso w(e) = C . e_r - e_d, pues si se cumple para el minimo valor de f(el peso del agm) se cumple para cualquier otra combinacion de aristas
+// Si cumple lo anterior entonces T existe, y como quiero maximizar C pruebo con un valor mayor
 
 struct Arista{
     Arista(int _u, int _v, int _d, int _r){
@@ -75,6 +77,7 @@ long double kruskal( int n){
 }
 
 void busqueda_binaria(long double a, long double b){
+    // P(C) = "Existe C = D/R, es decir, existe posible conexion de los edificios"
     int cont = 0;
     while(cont < 50 ){
         // para salvar casos como el de la diapo
