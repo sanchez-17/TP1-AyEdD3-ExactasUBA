@@ -6,6 +6,11 @@ using namespace std;
 int N, M, D, R, Dmax, Rmax;
 const int INF = 1e9, Dcota = 1e6;
 
+//Quiero el C = D/R que cumpla
+// Sum(d_i)/ Sum(r_i) >= C
+// Desarrollando queda
+// 0 >= Sum(C . r_i - d_i) = f, y f considero el peso de AGM de G' donde e en E' tienen peso w(e) = C . r_i - d_i
+
 struct Arista{
     Arista(int _u, int _v, int _d, int _r){
         u = _u; v = _v; d = _d; r = _r;
