@@ -39,9 +39,7 @@ int costoPrimero(int i){
 //prov = vector de posiciones de las proveedurias
 int choripanes(int u, int i, int k, vector<int>& prov){
     if(i==-1 && k!= 0) return INF;
-    if(k==0){
-        return distFinal(u,0);
-    }
+    if(k==0) return distFinal(u,0);
     if(memo[u][i][k] != -1) return memo[u][i][k];
 
     int coloco = choripanes(i,i-1,k-1,prov);
