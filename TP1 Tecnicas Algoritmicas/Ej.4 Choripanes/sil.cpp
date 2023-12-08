@@ -36,7 +36,6 @@ int costoPrimero(int i){
 //u = ultima proveeduria puesta
 //i = cant de puestos, o posicion donde se planea poner la sig proveeduria
 //k = cant de proveedurias
-//prov = vector de posiciones de las proveedurias
 int choripanes(int u, int i, int k){
     if(i==-1 && k!= 0) return INF;
     if(k==0) return distFinal(u,0);
