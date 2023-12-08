@@ -37,13 +37,13 @@ int costoPrimero(int i){
 //i = cant de puestos, o posicion donde se planea poner la sig proveeduria
 //k = cant de proveedurias
 //prov = vector de posiciones de las proveedurias
-int choripanes(int u, int i, int k, vector<int>& prov){
+int choripanes(int u, int i, int k){
     if(i==-1 && k!= 0) return INF;
     if(k==0) return distFinal(u,0);
     if(memo[u][i][k] != -1) return memo[u][i][k];
 
-    int coloco = choripanes(i,i-1,k-1,prov);
-    int no_coloco = choripanes(u, i-1, k, prov);
+    int coloco = choripanes(i,i-1,k-1);
+    int no_coloco = choripanes(u, i-1, k);
 
     if(u == N){
         coloco = coloco + costoPrimero(i);
@@ -76,8 +76,7 @@ vector<int> reconstruccion(int u, int i, int k){
 }
 
 void solve(){
-    vector<int> proveedurias;
-    cout << choripanes(N,N-1, K, proveedurias) << endl;
+    cout << choripanes(N,N-1, K) << endl;
     vector<int> res = reconstruccion(N, N-1, K);
     for(int i = res.size()-1; i > 0; i--){
         cout<<res[i]<<" ";
