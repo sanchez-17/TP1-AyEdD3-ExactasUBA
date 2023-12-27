@@ -1,55 +1,101 @@
 #include <iostream>
 #include <vector>
-#include <string>
+
 using namespace std;
-#define fastio ios_base::sync_with_stdio(0); cin.tie(0); cin.exceptions(cin.fai\
-lbit);
-#define forr(i,a,b) for(int i = (int) a; i < (int) b; i++)
-#define forn(i,n) forr(i,0,n)
 
-int c,N,K;
-const int INF = 10000000;
-const int MAX_N = 110;
-const int MAX_K = 110;
-int puestos[MAX_N];
-int dp[MAX_N][MAX_K] = {{-1}};
-vector<int> RES;
+int N, K, INF = 1e9;
+vector<int> puestos;
+vector<vector<vector<int>>> memo;
 
-int costo(vector<int>& v){
-    int costo = 0;
-    forn(i,N){
-        int distMin = INF;
-        forn(j,K){
-            distMin = min(distMin, abs(puestos[i]-v[j]));
-        }
-        costo += distMin;
+int costo(int i, int u){
+    int sum = 0;
+
+    if(u == N){//Si es la primera vez que colocamos una proveeduria
+        for(int idx = i; idx < N; idx++)
+            sum += abs(puestos[idx] - puestos[i]);
+        return sum;
     }
-    return costo;
+
+    if(i == -1){//Si es la ultima vez que colocamos una proveeduria
+        for(int idx = 0; idx < u; idx++)
+            sum += abs(puestos[idx] - puestos[u]);
+        return sum;
+    };
+
+    for(int idx = i; idx < u; idx++)
+            sum += min(abs(puestos[idx] - puestos[i]), abs(puestos[idx] - puestos[u]));
+    return sum;
+    }
+/*
+ * f(u,i,k) = min(f(i,i-1,k-1) + costo(i,u), f(u,i-1,k)), itera desde N hasta 0.
+ Nos dice el minimo costo de poner k proveedurias a partir de la posicion i y habiendo colocado la ultima proveeduria en u
+ Basicamente, toma el minimo entre poner una proveeduria en i y no ponerla.
+ Casos base:
+      * Al intentar poner la primer proveeduria, el costo es el costo de ir desde i hasta el final(No existe proveeduria anterior).
+      * Al intentar poner la ultima proveeduria, el costo es el costo de ir desde el principio hasta i(No existira proveeduria posterior)
+ 
+ costo = costo de poner una proveeduria en i y luego ir desde i hasta u. Pues los puestos que estan
+ entre i y u, ya estan cubiertos por la ultima proveeduria puesta y el costo respecto a la 
+ nueva proveeduria i puede ser menor respecto a la prov. u.
+
+* u = ultima proveeduria puesta
+* i = cant de puestos, o posicion donde se planea poner la sig proveeduria
+* k = cant de proveedurias
+*/
+int choripanes(int u, int i, int k){
+    //
+    if(i==-1 && k!= 0)      return INF;    //Si me quedaron proveedurias por poner.
+    if(k==0)                return costo(-1, u); //Si ya no me quedan proveedurias por poner.
+    if(memo[u][i][k] != -1) return memo[u][i][k];
+    //Coloco una proveeduria en i y actualizamos el costo desde i hasta la ultima proveeduria puesta
+    int coloco = choripanes(i,i-1,k-1);
+    coloco += costo(i,u);
+    int no_coloco = choripanes(u, i-1, k);
+
+    memo[u][i][k] = min(coloco, no_coloco);
+    return memo[u][i][k];
 }
 
-int f(int i, int k, vector<int>& v){
-    if(k > N-i)       return INF;
-    //if(dp[i][k]!= -1) return dp[i][k];
-    if(k == 0)        return costo(v);
-    int costo = INF;
-    forr(j,i,N-k+1){
-        v.push_back(puestos[j]);
-        int costoI = f(j,k-1,v);
-        v.pop_back();
-        costo = min(costo, costoI);
+vector<int> reconstruccion(int u, int i, int k){
+    //Devuelve la secuencia de proveedurias que se colocaron
+    vector<int> res;
+    for(int j = i-1; j>=0; j--){
+        if(memo[u][j][k] != memo[u][j+1][k]){//si coloque la proveeduria en j, pues el costo cambio
+            res.push_back(puestos[j+1]); //si coloque la proveeduria en j+1
+            u = j+1;                     //actualizo ultima proveeduria puesta
+            k = k-1;                     //actualizo cantidad de proveedurias que me quedan por poner
+        }
     }
-    dp[i][k] = costo;
-    return costo;
+    //si me quedan proveedurias por poner, es porque coloque la primer proveeduria en 0
+    if(k>0){
+        res.push_back(puestos[0]);
+    }
+    return res;
+}
+
+void solve(){
+    cout << choripanes(N,N-1, K) << endl;
+    vector<int> res = reconstruccion(N, N-1, K);
+    for(int i = (int)res.size() - 1; i > 0; i--){
+        cout << res[i] << " ";
+    }
+    cout << res[0] <<endl;
 }
 
 int main(){
+    int c;
     cin >> c;
-    forn(t,c){
+    for(int i = 0; i < c; i++){
         cin >> N >> K;
-        forn(i,N) cin >> puestos[i];
-        vector<int> v;
-        cout << f(0,K,v) << '\n';
-        forn(i,N+1) forn(j,K+1) dp[i][j] = -1;
+        puestos = vector<int>(N, -1);
+        memo = vector<vector<vector<int>>>
+                (N + 1,vector<vector<int>>
+                (N + 1, vector<int>
+                (K+1, -1)));
+        for(int j = 0; j < N; j++){
+            cin >> puestos[j];
+        }
+        solve();
     }
     return 0;
 }
