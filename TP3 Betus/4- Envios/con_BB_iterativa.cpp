@@ -3,16 +3,16 @@
 #include <vector>
 #include <queue>
 using namespace std;
-int N, M, X;
+int C, t, N, M, X;
 const int INF = 1e9;
 vector<vector<int>> capacidades;
 struct Arista{
     Arista(int _v, int _c){
         v = _v; c = _c;
     }
-    int v, c;
+    int v, c, w;
 };
-vector<vector<Arista>> ady,adyAux;
+vector<vector<Arista>> ady;
 
 /* Cada calle es una arista de capacidad c(e)
  * Dado un valor C, la cantidad max. de herramientas que puede llevar cada persona es div_entera(c(e), C).
@@ -30,18 +30,6 @@ vector<vector<Arista>> ady,adyAux;
  *     c : capacidad de la calle   1 <= c <= 1e6
  *
  */
-
-//version con busqueda binaria no dependiente de cant de iteraciones
-
-void actualizarPesosEnG(int c){
-    capacidades = vector<vector<int>>(N, vector<int>(N, 0));
-    //Actualizo las capacidades de las aristas a c(e)/C
-    for(int i = 0; i < N; i++)
-        for (Arista& e: adyAux[i]) {
-            capacidades[i][e.v] = e.c / c;
-            //capacidades[e.v][i] = 0;
-        }
-}
 
 int bfs(int s, int t, vector<int>& parent) {
     fill(parent.begin(), parent.end(), -1);
@@ -88,51 +76,55 @@ int EyK(int s, int t){
     return flow;
 }
 
-int busqueda_binaria(int a, int b){
-    int C;
-    while(b - a > 1){ //P(a) verdadero, P(b) falso
+void busqueda_binaria(int a, int b){
+    int cont = 0;
+    while(cont < 75 ){
+        cont++;
         C =(a+b)/2;
-        //Actualizo las capacidades de las aristas a c(e)/C
-        actualizarPesosEnG(C);
+        //Actualizo las capacidades de las aristas c(e)//C
+        for(int i = 0; i < N; i++)
+            for (Arista& e: ady[i]) {
+                e.w = e.c / C;
+                capacidades[i][e.v] = e.c / C;
+            }
         int flow = EyK(0,N-1);
-        //actualizarPesosEnG(1);
-        if (flow < X) //P(C) falso: "Si x personas pueden transportar C objetos por G hasta t, pueden transportar C-1"
-            b = C;
-        else
+        if (flow >= X)
             a = C;
+        else
+            b = C;
     }
-    return a; //El maximo valor de C que cumple P(C) es a
 }
 
 int solve(){
-    int flow = EyK(0,N-1), res;
-    //Restauramos los valores iniciales de las capacidades
-    actualizarPesosEnG(1);
-    if(flow >= X) res = busqueda_binaria(0, flow + 1);
-    else res = 0;
-    return X * res;
+    int flow = EyK(0,N-1);
+    if(flow >= X) busqueda_binaria(1, 1e9);
+    else C = 0;
+    return X * C;
 }
 
 int main(){
-    int t;
     cin >> t;
-    while(t--){
+    while(t>0){
         cin >> N >> M >> X;
         capacidades = vector<vector<int>>(N, vector<int>(N, 0));
         ady = vector<vector<Arista>>(N);
-        adyAux = vector<vector<Arista>>(N);
         for(int i = 0; i < M; i++){
             int v, w, c;
             cin >> v >> w >> c;
             v--; w--;
-            Arista vw(w , c);
-            Arista wv(v, c);
-            ady[v].push_back(vw);
-            ady[w].push_back(wv);
-            adyAux[v].push_back(vw);
+            Arista e1(w , c);
+            Arista e2(v, c);
+            e1.w = c;
+            e2.w = c;
+            ady[v].push_back(e1);
+            ady[w].push_back(e2);
             capacidades[v][w] = c;
         }
         cout << solve() << endl;
+        t--;
     }
     return 0;
 }
+
+
+
