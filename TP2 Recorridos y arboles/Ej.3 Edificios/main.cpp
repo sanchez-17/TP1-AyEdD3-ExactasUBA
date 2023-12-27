@@ -1,99 +1,124 @@
-#include <bits/stdc++.h>
-#define ii pair<int,int>
+#include <vector>
+#include <algorithm>
+#include <iostream>
 using namespace std;
-int N, M, tiempo;
-vector<vector<int> > matrix;
-vector<int> orden;
-vector<vector<ii> > ady;
-vector<int> d;//vector de distancias
 
-const int INF = 10000000;
-ii paciente, hospital;
+int N, M, D, R, Dmax, Rmax;
+const int INF = 1e9, Dcota = 1e6;
 
+//Quiero el C = D/R que cumpla
+// Saber si existe arbol T 
+// Sum(e_d)/ Sum(e_r) >= C  : tq e arista de T
+// Desarrollando queda
+// 0 >= Sum(C . e_r - e_d) = f, y f considero el peso de AGM de G' donde e en E' tienen peso w(e) = C . e_r - e_d, pues si se cumple para el minimo valor de f(el peso del agm) se cumple para cualquier otra combinacion de aristas
+// Si cumple lo anterior entonces T existe, y como quiero maximizar C pruebo con un valor mayor
 
-/* Definiciones: 
- *  Suma total de distancias entre edificios:
- * 		D = Sum_d_i 
- *  Suma total de repetidores entre edificios:
- * 		R = Sum_r_i
- * 
- * Se da:
- * 	N: cantidad de edificios               1 <= N <= 1e4
- *  M: cantidad de conexiones              1 <= M <= 1e5
- *  M aristas con formato: u, v, d, r;     1 <= d,r <= 1e6
- * 
- * Se pide:
- *  "En las redes de este tipo es importante que haya un camino entre todo par de edificios y que
- *	 no se forme un ciclo en la red."
- *  Imprimir D y R tq D/R sea maximo y G' conexo, un arbol generador
- * 
- * Idea 
- *  #S = N-1 y G'=(V, S) conexo
- *  0(0 aristas) <= D <= maximo(resulta de elegir todas las aristas:G)
- * 	1)Hallar el valor optimo D con busqueda binaria
- *  Propiedad binaria:
- * 		P(k)= "Conjunto S de N-1 aristas que sea conexo de"
- * 
- * 
- */
+struct Arista{
+    Arista(int _u, int _v, int _d, int _r){
+        u = _u; v = _v; d = _d; r = _r;
+    }
+    long double w;
+    int u, v, d, r;
 
+    bool operator<(const Arista& e) const
+    {
+        return w < e.w;
+    }
+};
 
-void listady(){
-    for(int i = 0; i < N; i++){
-        for(int j = 0; j < M; j++){
-            if(i > 0)   ady[M*i + j].push_back({M*i + j - M, matrix[i-1][j]});    //Casilla de arriba -1
-            if(i < N-1) ady[M*i + j].push_back({M*i + j + M, matrix[i+1][j]});    //Casilla de abajo   +1
-            if(j > 0)   ady[M*i + j].push_back({M*i + j -1, matrix[i][j-1]});    //Casilla de la izquierda
-            if(j < M-1) ady[M*i + j].push_back({M*i + j +1, matrix[i][j+1]});    //Casilla de la derecha
+vector<Arista> aristas;
+
+//Estructura de UFDS
+struct DSU {
+    DSU(int n){
+        padre = vector<int>(n);
+        for(int v = 0; v < n; v++) padre[v] = v;
+        tamano = vector<int>(n,1);
+    }
+    int find(int v){
+        if( v == padre[v] ) return v;
+        else return padre[v] = find(padre[v]);
+    }
+    void unite(int u, int v){
+        u = find(u); v = find(v);
+        if(tamano[u] < tamano[v]) swap(u,v);
+        //ahora u es al menos tan grande como v
+        padre[v] = u;
+        tamano[u] += tamano[v];
+    }
+    vector<int> padre;
+    vector<int> tamano;
+};
+
+long double kruskal( int n){
+    long double res = 0;
+    D = R = 0;
+    sort(aristas.begin(),aristas.end()); // Ordena segun el 1er elem, en este caso el peso
+    DSU dsu(n);
+
+    int contAristas = 0;
+    for(auto e : aristas){ // e = [w,u,v,r,d], w = c*r-d
+        long double w = e.w;
+        int u = e.u, v = e.v, r = e.r, d = e.d;
+
+        //u y v estan en distinta cc
+        if(dsu.find(u) != dsu.find(v)){
+            dsu.unite(u, v); // Agrega arista u-v
+            res += w; // Suma el peso de u-v
+            contAristas++;
+            D += d;
+            R += r;
+        }
+        if(contAristas == n-1) break;
+    }
+
+    if(contAristas == n-1) return res;
+    else return INF; // Cuando no logro conectarlos, pero en nuestro caso siempre va a poder
+}
+
+void busqueda_binaria(long double a, long double b){
+    // P(C) = "Existe C = D/R, es decir, existe posible conexion de los edificios"
+    int cont = 0;
+    while(cont < 50 ){
+        // para salvar casos como el de la diapo
+        cont++;
+        long double mid =(a+b)/2;
+        //con las aristas creamos nuevas para el kruskal (usa vector tripla)
+        for (Arista& e: aristas)
+            e.w = mid * e.r - e.d; //Actualizo el nuevo peso de las aristas
+        long double suma = kruskal(N);
+        if(suma <= 0){
+            a = mid;
+            Dmax = D;
+            Rmax = R;
+        }else{ //cuando es mayor, quiero uno mas chico
+            b=mid;
         }
     }
 }
 
-
-void bfs(int s, int t){
-    d[s] = t;
-    queue<int> q; q.push(s);
-    while (!q.empty()) {
-        int u = q.front(); q.pop();
-        for(auto v: ady[u]){
-            if (d[v.first] == INF && (d[u] + 1 < v.second || v.second==0)) {
-                d[v.first] = d[u] + 1;
-                q.push(v.first);
-            }
-        }
-    }
+void solve(){
+    busqueda_binaria(0, Dcota);
+    cout << Dmax << " " << Rmax << endl;
 }
 
-int main()
-{
-    int c;
-    cin >> c;
-    for(int i = 0; i < c; i++){ //Para los c casos de test
+int main() {
+    ios_base::sync_with_stdio(0); cin.tie(0); cin.exceptions(cin.failbit);
+    int C;
+    cin >> C;
+    for(int c = 0; c < C; c++){
         cin >> N >> M;
-        matrix = vector<vector<int> >(N, vector<int>(M));
-        orden = vector<int>(M*N);
-        d = vector<int>(N*M, INF);
-        //Ingresamos matriz
-        for(int j = 0; j < N; j++)
-            for(int k = 0; k < M; k++)
-                cin >> matrix[j][k];
-        cin >> hospital.first >> hospital.second;
-        cin >> paciente.first >> paciente.second;
-        //armamos lista de adyacencia
-        ady = vector<vector<ii> >(N*M);
-        listady();
-        //Computamos camino hasta el paciente
-        int p = M * paciente.first + paciente.second;
-        int h = M * hospital.first + hospital.second;
-        bfs(h, 0 );
-        int t = d[p]; //Guardamos el tiempo de ida
-        d = vector<int>(N*M, INF);
-        //Computamos camino hasta el hospital
-        bfs(p, t);
-        if(t==INF || d[h]==INF) cout << "IMPOSIBLE" << endl;
-        else cout << t << " " << d[h] << endl;
-
+        aristas.clear();
+        for(int m = 0; m < M; m++){
+            int u, v, d, r;
+            cin >> u >> v >> d >> r;
+            u--; v--; //Indexo los vertices comenzando desde 0
+            Arista e(u, v ,d, r);
+            aristas.push_back(e);
+        }
+        Dmax = 0;
+        Rmax = 0;
+        solve();
     }
-
     return 0;
 }
