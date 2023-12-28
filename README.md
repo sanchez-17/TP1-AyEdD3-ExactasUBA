@@ -30,6 +30,9 @@ Se centra en optimizar la colocación de proveedurías a lo largo de una línea 
 [Ir a la solución](https://github.com/sanchez-17/TPS-AyEdD3-ExactasUBA/blob/main/TP1%20Tecnicas%20Algoritmicas/Ej.4%20Choripanes/main.cpp)
 
 ## Trabajo Práctico N°2: Recorridos y Árboles
+Trascendiendo la mera resolución de problemas nos pondremos en el papel de un docente en una carrera contra el tiempo para corregir examenes. Ayudaremos a Pablo Lamponne a conducir una ambulancia en la ciudad de la furia(manifestaciones incluidas) y a establecer una red de conexion entre edificios.
+Aqui cada línea de código se transforma en un capítulo, y cada solución es una victoria conquistada.¿Te lo vas a perder? Echa un vistazo...
+
 * [Enunciado completo](https://github.com/sanchez-17/TPS-AyEdD3-ExactasUBA/blob/main/TP2%20Recorridos%20y%20arboles/Enunciado_tp2.pdf)
 ### Ejercicio 1: Malvinas
 
@@ -51,7 +54,7 @@ Se aborda el desafío de establecer una red eficiente entre routers dispuestos e
 
 Este TP3 es más que un simple conjunto de ejercicios, es un viaje. Desde la intensidad emocional de un rescate canino, donde Pablo Lamponne se convierte en el héroe de su propio relato, hasta la intriga y sigilo de una operación de envío de paquetes por la ciudad en una "operación secreta". Ademas veremos la colocación de torres en un tablero fracturado que nos transporta a un terreno donde la astucia y la táctica se entrelazan, a medida que exploramos la complejidad de las distancias y conexiones en una red de computadoras.
 Aqui los códigos se convierten en relatos épicos y las soluciones se entrelazan con las narrativas más cautivadoras...
-* [Enunciado completo](todo)
+* [Enunciado completo](https://github.com/sanchez-17/TPS-AyEdD3-ExactasUBA/blob/main/TP3%20Betus/enunciado_tp3.pdf)
 
 ### Ejercicio 1: Salvataje
 
