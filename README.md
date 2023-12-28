@@ -1,12 +1,17 @@
 # TPS-AyEdD3-ExactasUBA
 
-Este repositorio contiene las soluciones a los 3 trabajos prácticos de la materia Algoritmos y Estructuras de Datos III, correspondiente al segundo cuatrimestre de 2023 en la Facultad de Ciencias Exactas y Naturales de la Universidad de Buenos Aires (FCEyN-UBA).
+Este repositorio contiene las soluciones a los 3 trabajos prácticos de la materia Algoritmos y Estructuras de Datos III, correspondiente al segundo cuatrimestre de 2023 en la Facultad de Ciencias Exactas y Naturales de la Universidad de Buenos Aires (FCEyN-UBA). Cada TP consta de tres o cuatro ejercicios que abordan diversas técnicas algorítmicas vistas en clase. Cada ejercicio requiere el diseño e implementación de un algoritmo que supere una prueba de eficiencia en un juez online(SPOJ), evaluando tanto la eficiencia temporal como espacial.
 
+El equipo:
+* [Gaston Sanchez](https://github.com/sanchez-17)
+* [Silvina Flores Galván](https://github.com/silww)
+* Juan Pablo Aquilante
 
 ## Trabajo Práctico N°1: Técnicas algorítmicas
 * [Enunciado completo](https://github.com/sanchez-17/TPS-AyEdD3-ExactasUBA/blob/main/TP1%20Tecnicas%20Algoritmicas/enunciado_tp1.pdf)
 
-El TP consta de cuatro ejercicios que abordan diversas técnicas algorítmicas vistas en clase. Cada ejercicio requiere el diseño e implementación de un algoritmo que supere una prueba de eficiencia en un juez online, evaluando tanto la eficiencia temporal como espacial.
+Los ejercicios que se nos plantean tienen como protagonistas a un sujeto llamado Tuki y al Departamento de Computacion(DC).
+Trascendiendo la mera resolución de problemas nos pondremos en el papel de un docente en una carrera contra el tiempo para corregir examenes. Finalmente, veremos al DC descifrar las señales perdidas en un libro de cuentas y ayudar al crecimiento de la industria choripanera en la costanera.
 
 ### Ejercicio 1: Sendero
 
@@ -30,7 +35,7 @@ Se centra en optimizar la colocación de proveedurías a lo largo de una línea 
 [Ir a la solución](https://github.com/sanchez-17/TPS-AyEdD3-ExactasUBA/blob/main/TP1%20Tecnicas%20Algoritmicas/Ej.4%20Choripanes/main.cpp)
 
 ## Trabajo Práctico N°2: Recorridos y Árboles
-Trascendiendo la mera resolución de problemas nos pondremos en el papel de un docente en una carrera contra el tiempo para corregir examenes. Ayudaremos a Pablo Lamponne a conducir una ambulancia en la ciudad de la furia(manifestaciones incluidas) y a establecer una red de conexion entre edificios.
+Ayudaremos a Pablo Lamponne a conducir una ambulancia en la ciudad de la furia(manifestaciones incluidas) y a establecer una red de conexion entre edificios.
 Aqui cada línea de código se transforma en un capítulo, y cada solución es una victoria conquistada.¿Te lo vas a perder? Echa un vistazo...
 
 * [Enunciado completo](https://github.com/sanchez-17/TPS-AyEdD3-ExactasUBA/blob/main/TP2%20Recorridos%20y%20arboles/Enunciado_tp2.pdf)
