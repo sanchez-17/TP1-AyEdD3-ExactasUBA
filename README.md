@@ -57,8 +57,7 @@ Se aborda el desafío de establecer una red eficiente entre routers dispuestos e
 
 ## Trabajo Práctico N°3: Estrategias en Grafos y Flujos de Red
 
-Este TP3 es más que un simple conjunto de ejercicios, es un viaje. Desde la intensidad emocional de un rescate canino, donde Pablo Lamponne se convierte en el héroe de su propio relato, hasta la intriga y sigilo de una operación de envío de paquetes por la ciudad en una "operación secreta". Ademas veremos la colocación de torres en un tablero fracturado que nos transporta a un terreno donde la astucia y la táctica se entrelazan, a medida que exploramos la complejidad de las distancias y conexiones en una red de computadoras.
-Aqui los códigos se convierten en relatos épicos y las soluciones se entrelazan con las narrativas más cautivadoras...
+Este TP3 es más que un simple conjunto de ejercicios, es un viaje. Desde la intensidad emocional de un rescate canino, donde Pablo Lamponne se convierte en el héroe de su propio relato, hasta la intriga y sigilo de una operación de envío de paquetes por la ciudad en una "operación secreta".
 * [Enunciado completo](https://github.com/sanchez-17/TPS-AyEdD3-ExactasUBA/blob/main/TP3%20Betus/enunciado_tp3.pdf)
 
 ### Ejercicio 1: Salvataje
